@@ -1,0 +1,4 @@
+secret.ini
+env/
+__pycache__/
+test.json
