@@ -38,6 +38,7 @@ def scrape(url):
         return []
     # This will get all data stored in p, h1..h6 tags
     processed_text = process_text(all_text)
+    structured_data = []
     # Get data stored in the form of tables
     all_tables = soup.find_all('table')
     for table in all_tables:
@@ -57,12 +58,21 @@ def scrape(url):
             if len(table_data) == 0:
                 continue
             trow = []
+            trow_dict = {}
+            is_structured = True
             for index, data in enumerate(table_data):
                 try:
-                    trow.append(f'{thead[index]} {clean_text(data.get_text())}')
+                    trow_txt = clean_text(data.get_text())
+                    trow.append(
+                        f'{thead[index]} {trow_txt}')
+                    trow_dict[f'{thead[index]}'] = trow_txt
                 except:
                     trow.append(f'{clean_text(data.get_text())}')
+                    is_structured = False
             text = ' '.join(trow)
             if any(word in text.lower() for word in KEYWORDS):
-                processed_text.append(text)
-    return processed_text
+                if is_structured:
+                    structured_data.append(trow_dict)
+                else:
+                    processed_text.append(text)
+    return processed_text, structured_data
