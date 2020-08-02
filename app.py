@@ -28,4 +28,4 @@ def app(company_name):
             print(f"Error occured while scraping {url}")
 #    with open('test.json', 'w') as t:
 #        json.dump(textual_data, t)
-     return textual_data
+    return textual_data

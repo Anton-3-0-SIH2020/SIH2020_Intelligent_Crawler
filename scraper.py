@@ -44,7 +44,11 @@ def scrape(url):
         table_column = table.find_all('th')
         thead = []
         for head in table_column:
-            thead.append(clean_text(head.get_text()))
+            txt = clean_text(head.get_text())
+            txt_list = txt.split('\n')
+            for info in txt_list:
+                if len(info) != 0:
+                    thead.append(info)
         if len(thead) == 0:
             continue
         table_row = table.find_all('tr')
@@ -54,7 +58,10 @@ def scrape(url):
                 continue
             trow = []
             for index, data in enumerate(table_data):
-                trow.append(f'{thead[index]} {clean_text(data.get_text())}')
+                try:
+                    trow.append(f'{thead[index]} {clean_text(data.get_text())}')
+                except:
+                    trow.append(f'{clean_text(data.get_text())}')
             text = ' '.join(trow)
             if any(word in text.lower() for word in KEYWORDS):
                 processed_text.append(text)
